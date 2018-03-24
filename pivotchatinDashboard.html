@@ -1,14 +1,77 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
     <head>
             <title>
                     Dashboard
             </title>  
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
     </head> 
     <body ng-app="dashboardApp" ng-controller="dashboardController">
-        <h1>Hello {{title}}</h1>       
+        <h1>Welcome to {{title}}</h1>
+        <div class="alert alert-success">
+                <strong>Select merchant and Device to see graphs!</strong>
+        </div>       
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Merchants</h3>
+                <select class="form-control" ng-model="selectedMarchant">
+                    <option value="null">select Merchant</option>
+                    <option ng-repeat="m in merchants" value="{{m.merchant}}" ng-click="filterOffers()">{{m.merchant}}</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <h3>Devices</h3>
+                <select class="form-control" ng-model="selectedDevice">
+                        <option value="null">select device</option>
+                        <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getOffer(d); filterOffers(); getDeviceLocation(d);">{{d.device_id}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                    <div class="panel panel-default">
+                            <div class="panel-heading">Select device to check activity </div>
+                            <div class="panel-body" id="map" style="height:200px;">
+                            </div>
+                    </div>
+            </div>
+            <div class="col-md-6">
+                    <div class="panel panel-default">
+                            <div class="panel-heading">Best Offers</div>
+                            <div class="panel-body" id="map" style="height:200px;overflow-y:scroll;">
+                                <ul type="square">
+                                    <li ng-repeat="offer in filteredOffers">
+                                       <span class="label label-success">{{offer.merchant}}</span>
+                                        <span class="label label-warning">({{offer.offer}})</span>
+                                    </li>   
+                                </ul>
+                            </div>
+                    </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                            <div class="panel-heading">Histogram according to filtered offers</div>
+                            <div class="panel-body" style="overflow:scroll;">
+                                <canvas id="histogram" height="300" width="600"></canvas>
+                            </div>
+                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                            <div class="panel-heading">Line graph according to filtered offers</div>
+                            <div class="panel-body" style="overflow:scroll;">
+                                <canvas id="linegraph" height="300" width="600"></canvas>
+                            </div>
+                    </div>
+            </div>
+        </div>
         <script src="/dashboard.controller.js"></script>
+        <script>
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyDFRYUi0V-BPvCt7r25fOp6jn7CjtQ4f18 &callback=myMap" async defer></script>
     </body>  
 </html>
