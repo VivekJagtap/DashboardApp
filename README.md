@@ -8,7 +8,7 @@ A simple Dashboard for User,offers and Merchants
 3. Run command 'npm install' in command-prompt in PivotChainDashboardApp for installing all packages from         package.json.
 
 
-#Running project
+# Running project
 1. Run the server using 'http-server' command in the same directory.
 2. Hit url 'localhost:<port-number>/pivotchatinDashboard.html' on server and see the result;e.g http://localhost:8080/pivotchatinDashboard.html.
 
