@@ -1,10 +1,8 @@
-angular.module('dashboardApp',[]);
-
 angular.module('dashboardApp').controller('dashboardController',dashboardController);
 
-dashboardController.$inject=['$scope','$http','$window'];
+dashboardController.$inject=['$scope','$http','$window','canvasService'];
 
-function dashboardController($scope,$http,$window){
+function dashboardController($scope,$http,$window,canvasService){
     $scope.title = "Dashboard";
     $window.locations = [];
 
@@ -19,6 +17,7 @@ function dashboardController($scope,$http,$window){
     $scope.getDevices = function(){
         $http({method:'GET',url:'http://35.168.89.251:5000/get_devices',body:null}).then(function(success){
             $scope.devices = success.data.result;
+            
         },function(error){
             console.log("error while getting devices : "+error.status);
         });
@@ -65,9 +64,9 @@ function dashboardController($scope,$http,$window){
         
         if(!t){
             //Render Histogram
-            $scope.renderHistogram();
+            canvasService.renderHistogram($scope.filteredOffers);
             //Render LineGraph
-            $scope.renderLineGraph();
+            canvasService.renderLineGraph($scope.filteredOffers);
         }
         
     }
@@ -109,91 +108,5 @@ function dashboardController($scope,$http,$window){
             marker.setMap(map);
         }
     }
-
-    /**
-     * Render Histogram
-     */
-    $scope.renderHistogram = function(){
-        var c = document.getElementById("histogram");
-        var ctx = c.getContext("2d");
-        var context = c.getContext("2d");
-        context.clearRect(0, 0, c.width, c.height);
-        context.beginPath();
-        context.moveTo(200,10);
-        context.lineTo(200, 200);
-        context.lineWidth = 5;
-        // set line color
-        context.strokeStyle = 'black';
-        context.stroke();
-
-        context.font = "14px Verdana";
-        context.fillText('Merchants',10, 190);
-
-        context.font = "14px Verdana";
-        context.fillText('Dis', 305, 190);
-
-        for(var i=0,y=30;i<$scope.filteredOffers.length;i++){
-            ctx.beginPath();
-            ctx.moveTo(205, y);
-            ctx.lineWidth = 20;
-            ctx.lineTo(100+parseInt($scope.filteredOffers[i].dis), y);
-            ctx.strokeStyle = 'slategrey';
-            ctx.stroke();
-            
-            ctx.font = "12px Verdana";
-            ctx.fillText(''+$scope.filteredOffers[i].dis,parseInt($scope.filteredOffers[i].dis)+110, y);
-            ctx.fillStyle = "darkgreen";
-            
-            ctx.font = "12px Verdana";
-            ctx.fillText(''+$scope.filteredOffers[i].merchant, 5, y);
-
-            y+=30;
-        }
-    }
-
-    /**
-     * Render line graph.
-     */
-    $scope.renderLineGraph = function(){
-
-        var c = document.getElementById("linegraph");
-        var ctx = c.getContext("2d");
-        ctx.clearRect(0, 0, c.width, c.height);
-        ctx.beginPath();
-        ctx.moveTo(30, 30);
-        ctx.lineTo(600, 30);
-        ctx.stroke();
-
-        ctx.font = "12px Verdana";
-        ctx.fillText('line graph by Dis field',15,15);
-        ctx.fillStyle = "darkgreen";
-        
-        
-        ctx.font = "12px Verdana";
-        ctx.fillText('0.0',10,30);
-        ctx.fillStyle = "darkgreen";
-        
-        for(var i=0,x=50,y=10;i<$scope.filteredOffers.length;i++){
-            ctx.beginPath();
-            ctx.arc(x,parseInt($scope.filteredOffers[i].dis)-50,5,0,2*Math.PI);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(x,parseInt($scope.filteredOffers[i].dis)-50,3,0,2*Math.PI);
-            ctx.stroke();
-            ctx.fill();
-
-
-            ctx.font = "10px Verdana";
-            ctx.fillText(''+$scope.filteredOffers[i].dis,x-30,parseInt($scope.filteredOffers[i].dis)-30);
-            ctx.fillStyle = "darkgreen";
-
-            ctx.font = "10px Verdana";
-            ctx.fillText(''+$scope.filteredOffers[i].merchant,x-30,parseInt($scope.filteredOffers[i].dis)-65);
-            ctx.fillStyle = "blue";
-
-            x+=50;
-        }
-    }
-
+    
 }
