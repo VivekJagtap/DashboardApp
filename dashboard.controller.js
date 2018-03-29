@@ -41,18 +41,26 @@ function dashboardController($scope,$http,$window,canvasService){
     };
 
     $scope.filterOffers = function(){
+        
         var t = false;
+        
+        if($scope.selectedMarchant == '#')
+            $scope.selectedMarchant = null;
+        
+        if($scope.selectedDevice == '#')
+            $scope.selectedDevice = null;
+
         $scope.filteredOffers = [];
         for(var i=0;i<$scope.offers.length;i++){
-            if($scope.selectedMarchant && !$scope.selectedDevice){
+            if($scope.selectedMarchant && (!$scope.selectedDevice||$scope.selectedDevice == '#')){
                 if($scope.offers[i].merchant == $scope.selectedMarchant)
                 $scope.filteredOffers.push($scope.offers[i]);
             }
-            else if(!$scope.selectedMarchant && $scope.selectedDevice){
+            else if((!$scope.selectedMarchant || $scope.selectedMarchant=='#') && $scope.selectedDevice){
                 if($scope.offers[i].device_id == $scope.selectedDevice)
                      $scope.filteredOffers.push($scope.offers[i]);
             }
-            else if(!$scope.selectedMarchant && !$scope.selectedDevice){
+            else if((!$scope.selectedMarchant||$scope.selectedMarchant == '#') && (!$scope.selectedDevice||$scope.selectedDevice == '#')){
                 $scope.filteredOffers.push($scope.offers[i]);
                 t = true;
             }
@@ -61,14 +69,18 @@ function dashboardController($scope,$http,$window,canvasService){
                     $scope.filteredOffers.push($scope.offers[i]);
             }
         }
-        
+
+
         if(!t){
             //Render Histogram
             canvasService.renderHistogram($scope.filteredOffers);
             //Render LineGraph
             canvasService.renderLineGraph($scope.filteredOffers);
         }
-        
+        else{
+            canvasService.clearCanvas('histogram');
+            canvasService.clearCanvas('linegraph'); 
+        }
     }
 
     $scope.getDeviceLocation = function(device){

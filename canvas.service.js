@@ -213,5 +213,13 @@ function canvasService(){
                 x+=50;
             }
         }
+
+        canvasServiceObject.renderPieChart = function(data){
+            
+            for(let i=0;i<data.length;i++){
+                
+            }
+        }
+
         return canvasServiceObject;
 }
