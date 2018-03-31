@@ -24,9 +24,11 @@ function dashboardController($scope,$http,$window,canvasService){
     }
 
     $scope.getOffers = function(){
+        $scope.offerTitle = 'All Offers are :';
         $http({method:'GET',url:'http://35.168.89.251:5000//get_all_offers',body:null}).then(function(success){
                 $scope.offers = success.data; 
-                $scope.filteredOffers = success.data;   
+                $scope.filteredOffers = success.data;
+                $scope.classifyOffers($scope.offers);   
         },function(error){
             console.log("error while getting devices : "+error.status);
         });
@@ -53,18 +55,22 @@ function dashboardController($scope,$http,$window,canvasService){
         $scope.filteredOffers = [];
         for(var i=0;i<$scope.offers.length;i++){
             if($scope.selectedMarchant && (!$scope.selectedDevice||$scope.selectedDevice == '#')){
+                $scope.offerTitle = 'Offers sent by '+$scope.selectedMarchant+' are :';
                 if($scope.offers[i].merchant == $scope.selectedMarchant)
                 $scope.filteredOffers.push($scope.offers[i]);
             }
             else if((!$scope.selectedMarchant || $scope.selectedMarchant=='#') && $scope.selectedDevice){
+                $scope.offerTitle = 'Offers sent to device-'+$scope.selectedDevice+' are :';
                 if($scope.offers[i].device_id == $scope.selectedDevice)
                      $scope.filteredOffers.push($scope.offers[i]);
             }
             else if((!$scope.selectedMarchant||$scope.selectedMarchant == '#') && (!$scope.selectedDevice||$scope.selectedDevice == '#')){
+                $scope.offerTitle = 'All Offers are :';
                 $scope.filteredOffers.push($scope.offers[i]);
                 t = true;
             }
             else{
+                $scope.offerTitle = 'Offers sent by '+$scope.selectedMarchant+' to device -'+$scope.selectedDevice+' are :';
                 if($scope.offers[i].merchant == $scope.selectedMarchant && $scope.offers[i].device_id == $scope.selectedDevice)
                     $scope.filteredOffers.push($scope.offers[i]);
             }
@@ -98,6 +104,34 @@ function dashboardController($scope,$http,$window,canvasService){
     $scope.getMerchants();
     $scope.getDevices();
 
+    $scope.classifyOffers = function(offers){
+        $scope.classifiedMerchants = [];
+            for(var i=0;i<$scope.merchants.length;i++){
+            var dummyMerchantOffers = 0;  
+                for(var j=0;j<offers.length;j++){
+                    if(offers[j].merchant == $scope.merchants[i].merchant){
+                        dummyMerchantOffers++;
+                    }
+                }
+            var obj = {merchant:$scope.merchants[i].merchant , offers:dummyMerchantOffers}
+            $scope.classifiedMerchants.push(obj);
+        } 
+
+
+        $scope.classifiedDevices = [];
+            for(var i=0;i<$scope.devices.length;i++){
+            var dummyDeviceOffers = 0;  
+                for(var j=0;j<offers.length;j++){
+                    if(offers[j].device_id == $scope.devices[i].device_id){
+                        dummyDeviceOffers++;
+                    }
+                }
+            var obj = {device:$scope.devices[i].device_id , offers:dummyDeviceOffers}
+            $scope.classifiedDevices.push(obj);
+            } 
+        console.log("m--->"+JSON.stringify($scope.classifiedMerchants));
+        console.log("d--->"+JSON.stringify($scope.classifiedDevices));    
+    };
     /**
      * Render Google Map.
      */

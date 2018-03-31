@@ -11,91 +11,77 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     </head> 
     <body ng-app="dashboardApp" ng-controller="dashboardController">
+                
                     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-                            <a class="navbar-brand" href="#"><strong>Dash-Board</strong></a>
+                            <a class="navbar-brand" href="#"><strong>Dashboard</strong></a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="navbar-toggler-icon"></span>
                             </button>
                             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                                        <ul class="navbar-nav mr-auto">
+                                                
+                                        </ul>
+                                        <form align="right" name="loginForm"  novalidate class="form-inline my-2 my-lg-0">
+                                                        <select placeholder="Merchants" class="form-control mr-sm-2" ng-model="selectedMarchant" ng-change="filterOffers()">
+                                                                        <option value="#" selected>select Merchant</option>
+                                                                        <option ng-repeat="m in merchants" value="{{m.merchant}}" >{{m.merchant}}</option>
+                                                        </select>
+                                                        <select placeholder="Devices" class="form-control mr-sm-2" ng-model="selectedDevice" ng-change="filterOffers()">
+                                                                        <option value="#" selected>select device</option>
+                                                                        <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getOffer(d); filterOffers(); getDeviceLocation(d);">{{d.device_id}}</option>
+                                                        </select>
+                                        </form> 
                             </div>
                     </nav>
-                    <div class="fluid-container" style="padding-top:60px;">
-                        <div class="row">
-                            <div class="col-md-12" id="map" style="height:200px;">
-                            </div>    
-                        </div>        
-                        <form name="dashboard">
-                            <div class="row">    
-                                    <div class="col-md-6">
-                                        <select class="form-control" ng-model="selectedMarchant" ng-change="filterOffers()">
-                                            <option value='#' selected="selected">select Merchant</option>
-                                            <option ng-repeat="m in merchants" value="{{m.merchant}}" >{{m.merchant}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <select class="form-control" ng-model="selectedDevice" ng-change="filterOffers()">
-                                                <option value='#' selected="selected">select device</option>
-                                                <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getOffer(d); filterOffers(); getDeviceLocation(d);">{{d.device_id}}</option>
-                                        </select>
-                                    </div>
-                             </div>
-                        </form>
-                             <div class="row">
-                                    <div class="col-md-6">
-                                            <div class="card bg-light" >
-                                                    <div class="card-header">
-                                                            Select device to check activity
-                                                    </div>
-                                                    <div class="card-body" style="height:200px;">
-                                                    </div>
-                                            </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                            <div class="card bg-light" >
-                                                    <div class="card-header">
-                                                            Best Offers
-                                                    </div>
-                                                    <div class="card-body" id="map" style="height:200px;overflow-y:scroll;">
-                                                            <ul type="square">
-                                                                    <li ng-repeat="offer in filteredOffers">
-                                                                       <span class="badge badge-success">{{offer.merchant}}</span>
-                                                                        <span class="badge badge-primary">({{offer.offer}})</span>
-                                                                    </li>   
-                                                            </ul>
-                                                    </div>
-                                            </div>
-                                    </div>
-                                </div><hr/>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                            <div class="card bg-light" >
-                                                    <div class="card-header">
-                                                            Histogram
-                                                    </div>
-                                                    <div class="card-body" id="map" style="height:200px;overflow:scroll;">
-                                                            <canvas id="histogram" height="300" width="600"></canvas>
-                                                    </div>
-                                            </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                            <div class="card bg-light">
-                                                    <div class="card-header">
-                                                            Line-Graph
-                                                    </div>
-                                                    <div class="card-body" style="height:200px;overflow:scroll;">
-                                                            <canvas id="linegraph" height="300" width="1200"></canvas>
-                                                    </div>
-                                            </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                        <div class="col-md-12">
-                                                <div class="card bg-light">
-                                                        <div class="card-header">
-                                                           Line-Graph
+                    
+                    <div class="fluid-container" style="padding-top:60px;">        
+                                <div class="row" >
+                                        <div class="col-md-4">
+                                                        <div class="card bg-light" style="height:400px;overflow: scroll;">
+                                                                <div class="card-header">
+                                                                        {{offerTitle}}
+                                                                </div>
+                                                                <div class="card-body">
+                                                                        <ul type="square">
+                                                                                <li ng-repeat="offer in filteredOffers">
+                                                                                        <span class="badge badge-success">{{offer.merchant}}</span>
+                                                                                        <span class="badge badge-primary">({{offer.offer}})</span>
+                                                                                </li>   
+                                                                        </ul>
+                                                                </div>
                                                         </div>
-                                                        <div class="card-body" style="height:200px;overflow:scroll;">
-                                                            <canvas id="linegraph2" height="300" width="1200"></canvas>
+                                        </div>
+                                        <div class="col-md-8">
+                                                <div class="row" style="height:400px;overflow: scroll;">
+                                                        <div class="col-md-12">
+                                                                <ul class="nav nav-tabs" role="tablist">
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link active" data-toggle="tab" href="#hist">Histogram</a>
+                                                                        </li>
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" data-toggle="tab" href="#line">Linegraph</a>
+                                                                        </li>
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" data-toggle="tab" href="#googleMap">Map</a>
+                                                                        </li>
+                                                                </ul>
+                                                                                    
+                                                                                      <!-- Tab panes -->
+                                                                <div class="tab-content" style="height:400px;overflow:scroll;">
+                                                                        <div id="hist" class="container tab-pane active"><br>
+                                                                                <p>Histogram about distance of devices from merchants</p>
+                                                                                <canvas id="histogram" height="300" width="600"></canvas>
+                                                                        </div>
+                                                                        <div id="line" class="container tab-pane fade"><br>
+                                                                                <p>Line graph of Distances</p>
+                                                                                <canvas id="linegraph" height="300" width="1200"></canvas>
+                                                                        </div>
+                                                                        <div id="googleMap" class="container tab-pane fade"><br>
+                                                                                <p>Device Activity</p>
+                                                                                <div class="col-md-12" id="map" style="height:300px;">
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
                                                         </div>
                                                 </div>
                                         </div>
@@ -105,7 +91,6 @@
                             <hr/>
                             <p>&copy; PivotChain, Inc. </p>
                     </footer>
-        
         <script src="/dashboard.module.js"></script>
         <script src="/canvas.service.js"></script>            
         <script src="/dashboard.controller.js"></script>

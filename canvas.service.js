@@ -51,6 +51,42 @@ function canvasService(){
             context.fillStyle = credentials.color;
         }
 
+
+        canvasServiceObject.createAbbr = function(textObject){
+        }
+
+        canvasServiceObject.createAxis = function(minValue,maxValue,axis,canvasId,padding){
+            var c = document.getElementById(credentials.elementId);
+            var canvasHeight = c.height;
+            var canvasWidth = c.width;  
+            if(axis == 'x' || axis == 'X'){
+                var credentials = {
+                    elementId:'histogram',
+                    startX:0+padding,
+                    startY:0,
+                    endX:0+padding,
+                    endY:canvasHeight,
+                    color:'black',
+                    stroke:true,
+                    lineWidth:1
+                }
+                canvasServiceObject.createLine(credentials);
+            }
+            if(axis == 'y' || axis == 'y'){
+                var credentials = {
+                    elementId:'histogram',
+                    startX:0+padding,
+                    startY:0,
+                    endX:0+padding,
+                    endY:canvasHeight,
+                    color:'black',
+                    stroke:true,
+                    lineWidth:1
+                }
+                canvasServiceObject.createLine(credentials);
+            }
+        }
+
          /**
          * Render Histogram
          */
