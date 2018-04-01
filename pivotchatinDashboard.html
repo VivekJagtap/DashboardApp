@@ -4,7 +4,10 @@
             <title>
                     Dashboard
             </title>  
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/pivotal.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -13,7 +16,7 @@
     <body ng-app="dashboardApp" ng-controller="dashboardController">
                 
                     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-                            <a class="navbar-brand" href="#"><strong>Dashboard</strong></a>
+                            <a class="navbar-brand" href="#"><strong>{{title}}</strong></a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="navbar-toggler-icon"></span>
                             </button>
@@ -22,27 +25,38 @@
                                                 
                                         </ul>
                                         <form align="right" name="loginForm"  novalidate class="form-inline my-2 my-lg-0">
-                                                        <select placeholder="Merchants" class="form-control mr-sm-2" ng-model="selectedMarchant" ng-change="filterOffers()">
-                                                                        <option value="#" selected>select Merchant</option>
-                                                                        <option ng-repeat="m in merchants" value="{{m.merchant}}" >{{m.merchant}}</option>
-                                                        </select>
-                                                        <select placeholder="Devices" class="form-control mr-sm-2" ng-model="selectedDevice" ng-change="filterOffers()">
-                                                                        <option value="#" selected>select device</option>
-                                                                        <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getOffer(d); filterOffers(); getDeviceLocation(d);">{{d.device_id}}</option>
-                                                        </select>
+                                                       <div class="form-group">
+                                                               <label style="color:honeydew;" for="merchants">Merchants :</label>
+                                                                <select placeholder="Merchants" id="merchants" class="form-control mr-sm-2" ng-model="selectedMarchant" ng-change="filterOffers()">
+                                                                                <option value="#" selected>select Merchant</option>
+                                                                                <option ng-repeat="m in merchants" value="{{m.merchant}}" >{{m.merchant}}</option>
+                                                                </select>
+                                                       </div>
+                                                       <div class="form-group">
+                                                                <label style="color:honeydew;" for="devices">Devices :</label>
+                                                                <select placeholder="Devices" id="devices" class="form-control mr-sm-2" ng-model="selectedDevice" ng-change="filterOffers()">
+                                                                                <option value="#" selected>select device</option>
+                                                                                <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getOffer(d); filterOffers(); getDeviceLocation(d);">{{d.device_id}}</option>
+                                                                </select>
+                                                        </div>
                                         </form> 
                             </div>
                     </nav>
                     
-                    <div class="fluid-container" style="padding-top:60px;">        
-                                <div class="row" >
-                                        <div class="col-md-4">
-                                                        <div class="card bg-light" style="height:400px;overflow: scroll;">
+                    <div class="fluid-container" style="padding-top:60px;">       
+                                <div class="row">
+                                        <div class="alert alert-info" style="width:100%;" align="center">
+                                              Please select Merchant and/or Device to see the result
+                                        </div>
+                                </div> 
+                                <div class="row">
+                                        <div class="col-md-2">
+                                                        <div class="card bg-light" style="height:600px;overflow: scroll;">
                                                                 <div class="card-header">
-                                                                        {{offerTitle}}
+                                                                        All Offers<!-- All Offers {{offerTitle}} -->
                                                                 </div>
                                                                 <div class="card-body">
-                                                                        <ul type="square">
+                                                                        <ul style="list-style-type: none;padding: 0px;">
                                                                                 <li ng-repeat="offer in filteredOffers">
                                                                                         <span class="badge badge-success">{{offer.merchant}}</span>
                                                                                         <span class="badge badge-primary">({{offer.offer}})</span>
@@ -51,52 +65,97 @@
                                                                 </div>
                                                         </div>
                                         </div>
-                                        <div class="col-md-8">
-                                                <div class="row" style="height:400px;overflow: scroll;">
-                                                        <div class="col-md-12">
-                                                                <ul class="nav nav-tabs" role="tablist">
-                                                                        <li class="nav-item">
-                                                                                <a class="nav-link active" data-toggle="tab" href="#hist">Histogram</a>
-                                                                        </li>
-                                                                        <li class="nav-item">
-                                                                                <a class="nav-link" data-toggle="tab" href="#line">Linegraph</a>
-                                                                        </li>
-                                                                        <li class="nav-item">
-                                                                                <a class="nav-link" data-toggle="tab" href="#googleMap">Map</a>
-                                                                        </li>
-                                                                </ul>
-                                                                                    
-                                                                                      <!-- Tab panes -->
-                                                                <div class="tab-content" style="height:400px;overflow:scroll;">
-                                                                        <div id="hist" class="container tab-pane active"><br>
-                                                                                <p>Histogram about distance of devices from merchants</p>
-                                                                                <canvas id="histogram" height="300" width="600"></canvas>
+                                        <div class="col-md-10" style="height: 600px;overflow:scroll;">
+                                                <div class="row" style="height:400px;">
+                                                        <div class="col-md-6">
+                                                                <p>Histogram about distance of devices from merchants</p>
+                                                                        <div id="hist" class="histogram"><br>
+                                                                                <canvas  id="histogram" height="300" width="600"></canvas>
                                                                         </div>
-                                                                        <div id="line" class="container tab-pane fade"><br>
-                                                                                <p>Line graph of Distances</p>
-                                                                                <canvas id="linegraph" height="300" width="1200"></canvas>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                                <p>Line graph of Distances</p>
+                                                                        <div id="line" class="linegraph"><br>
+                                                                                <canvas  id="linegraph" height="300" width="600"></canvas>
                                                                         </div>
-                                                                        <div id="googleMap" class="container tab-pane fade"><br>
-                                                                                <p>Device Activity</p>
-                                                                                <div class="col-md-12" id="map" style="height:300px;">
-                                                                                </div>
-                                                                        </div>
-                                                                </div>
+                                                        </div>
+                                                </div>
+                                                <div class="row">
+                                                        <p>&nbsp;Device Activity</p>
+                                                        <div class="col-md-12" id="map" style="height:200px;">
                                                         </div>
                                                 </div>
                                         </div>
+                                </div><hr/>
+                                <div class="row">
+                                        <div class="col-md-6">
+                                                <div class="card bg-light  mb-3">
+                                                                <div class="card-header">Total Offers Sent By Merchants</div>
+                                                                <div class="card-body" style="padding:0px;">
+                                                                                <table class="table table-sm table-condensed table-bordered table-striped">
+                                                                                                <thead>
+                                                                                                        <tr>
+                                                                                                          <th>Merchant</th>
+                                                                                                          <th>Sent Offers</th>
+                                                                                                        </tr>
+                                                                                                </thead>
+                                                                                        <tbody>
+                                                                                                <tr ng-repeat="m in classifiedMerchants|startFrom:currentPage*pageSize|limitTo:pageSize">
+                                                                                                                <td>{{m.merchant}}</td>
+                                                                                                                <td>{{m.offers}} </td>
+                                                                                                </tr>
+                                                                                        </tbody>
+                                                                                </table>
+                                                                                        
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                                <div class="btn-group" role="group" style="float:right;">
+                                                                                                <button type="button" class="btn btn-outline-success" ng-disabled="currentPage == 0" ng-click="changePage(-1,'merchant');">Pre</button>
+                                                                                                <button type="button" class="btn btn-disabled btn-success">{{currentPage+1}}/{{numberOfmerchantsPages()}}</button>
+                                                                                                <button type="button" class="btn btn-outline-success" ng-disabled="currentPage >= classifiedMerchants.length/pageSize - 1" ng-click="changePage(1,'merchant');">Next</button>
+                                                                                </div>
+                                                                </div>
+                                                </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                                        <div class="card bg-light  mb-3">
+                                                                        <div class="card-header">Total Offers Received By Devices</div>
+                                                                        <div class="card-body" style="padding:0px;">
+                                                                                        <table class="table table-sm table-condensed table-bordered table-striped" >
+                                                                                                        <thead>
+                                                                                                                <tr>
+                                                                                                                  <th>Device</th>
+                                                                                                                  <th>Received Offers</th>
+                                                                                                                </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                                <tr ng-repeat="d in classifiedDevices|startFrom:currentdPage*pageSize|limitTo:pageSize">
+                                                                                                                        <td>{{d.device}}</td>
+                                                                                                                        <td>{{d.offers}}</td>
+                                                                                                                </tr>
+                                                                                                        </tbody>
+                                                                                      
+                                                                                                </table>
+                                                                                                
+                                                                        </div>
+                                                                        <div class="card-footer" align="center">
+                                                                                        <div class="btn-group" role="group" style="float:right;">
+                                                                                                        <button type="button" class="btn btn-outline-success" ng-disabled="currentdPage == 0" ng-click="changePage(-1,'device');">Pre</button>
+                                                                                                        <button type="button" class="btn btn-disabled btn-success">{{currentdPage+1}}/{{numberOfdevicePages()}}</button>
+                                                                                                        <button type="button" class="btn btn-outline-success" ng-disabled="currentdPage >= classifiedDevices.length/pageSize - 1" ng-click="changePage(1,'device');">Next</button>
+                                                                                        </div>
+                                                                        </div>
+                                                        </div>
+                                                        
+                                        </div>
                                 </div>
                     </div>
-                    <footer class="container-fluid" style="bottom: 0px;color:darkslateblue;">
-                            <hr/>
-                            <p>&copy; PivotChain, Inc. </p>
-                    </footer>
         <script src="/dashboard.module.js"></script>
         <script src="/canvas.service.js"></script>            
         <script src="/dashboard.controller.js"></script>
         
         <script>
         </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyDFRYUi0V-BPvCt7r25fOp6jn7CjtQ4f18 &callback=myMap" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFRYUi0V-BPvCt7r25fOp6jn7CjtQ4f18&callback=myMap" async defer></script>
     </body>  
 </html>

@@ -1,0 +1,47 @@
+ul {
+    list-style-type: none;
+    padding:0;
+  }
+
+select {
+    width:300px; 
+} 
+
+#hist{
+    height:350px;
+}
+ 
+#line{
+    height:350px;
+}
+
+.histogram{
+      background-color: #f0f1f2;
+      height:350px;
+      overflow-y:scroll;
+  }
+
+.linegraph{
+    background-color: #f0f1f2;
+    height:350px;
+    overflow-x:scroll;
+}
+
+.map{
+    background-color: #f0f1f2;
+    height:200px;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px slategrey;
+    box-shadow: inset 0 0 6px slategrey;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
