@@ -348,7 +348,6 @@ function canvasService($window){
                     elementId:'linegraph',  
                     startX:linesEnd.x,
                     startY:linesEnd.y-20,
-                    startY:parseInt(filteredOffers[i].dis)-65,
                     text:''+filteredOffers[i].merchant,
                     color:'darkgreen',
                     fontSize:10
