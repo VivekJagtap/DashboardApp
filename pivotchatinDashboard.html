@@ -46,24 +46,8 @@
           </div>
   </nav>
           <div class="container-fluid">
-          <div class="row">
+          <div class="row" style="padding-top:50px;">
                   <main role="main" class="col-md-12 ml-sm-auto pt-3 px-4">
-                      <form name="loginForm"  novalidate class="form-inline">
-                          <div class="form-row" style="width:100%;margin-bottom:10px;">
-                            <div class="col-sm">
-                                <select placeholder="Merchants" id="merchants" class="form-control" ng-model="selectedMarchant" ng-change="filterOffers()"> 
-                                    <option value="#">select Merchant</option>
-                                    <option ng-repeat="m in merchants" value="{{m.merchant}}" >{{m.merchant}}</option>
-                                </select>
-                            </div>
-                            <div class="col-sm">
-                                <select placeholder="Devices" id="devices" class="form-control"  ng-model="selectedDevice" ng-change="filterOffers(); getOffer();">
-                                    <option value="#">select device</option>
-                                    <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getDeviceLocation(d);">{{d.device_id}}</option>
-                                </select>
-                            </div>
-                          </div>
-                        </form>
                     <div class="row" style="margin-bottom: 20px;">
                       <div class="col-sm">
                           <div id="pi1" class="pie"><br>
@@ -174,12 +158,15 @@
                             </div>
                         </div>
                     </div>
+
+                    <footer class="container-fluid" style="bottom: 0px;color:darkslateblue;">
+                        <hr/>                   
+                        <p>&copy; Dashboard, Inc. &middot; <a href="#">Privacy</a></p>
+                    </footer>
                   </main>
+                  
                 </div>
               </div>
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script src="/dashboard.module.js"></script>  
     <script src="/chart.service.js"></script>            

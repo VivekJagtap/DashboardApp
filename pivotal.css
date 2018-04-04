@@ -27,6 +27,23 @@ ul {
     margin-bottom: 20px;
 }
 
+@media only screen and (max-width: 768px) {
+    #hist{
+        height:300px;
+        color: rgb(18, 16, 36);
+        border-top: 2px solid teal;
+        margin-bottom: 100px;
+    }
+     
+    #line{
+        height:300px;
+        color: rgb(18, 16, 36);
+        border-top: 2px solid darkgreen;
+        margin-bottom: 50px;
+    }
+    
+}
+
 .pie {
     color: rgb(18, 16, 36);
     border-top: 2px solid slateblue;

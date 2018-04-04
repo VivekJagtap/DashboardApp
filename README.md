@@ -14,8 +14,9 @@ A simple Dashboard for User,offers and Merchants
 
 # Components used
 1. NodeJs
-3. AngularJS(v1.5.5)
-5. Bootstrap
+2. AngularJS(v1.5.5)
+3. Bootstrap
+4. Chart.js
 
 # Server Data
 Data is getting from API calls.
