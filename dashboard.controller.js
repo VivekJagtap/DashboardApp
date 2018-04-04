@@ -8,12 +8,18 @@ angular.module('dashboardApp').controller('dashboardController',dashboardControl
     }
 });
 
-dashboardController.$inject=['$scope','$http','$window','canvasService'];
+dashboardController.$inject=['$scope','$http','$window','chartService'];
 
-function dashboardController($scope,$http,$window,canvasService){
+function dashboardController($scope,$http,$window,chartService){
     $scope.title = "Dashboard";
     $window.locations = [];
+    $scope.type="pie";
+    $scope.location = 0;
+    $scope.t = true;
 
+    $scope.setType = function(t){
+        $scope.type=t;
+    };
     $scope.currentPage = 0;
     $scope.currentdPage = 0;
     $scope.pageSize = 5;
@@ -24,15 +30,14 @@ function dashboardController($scope,$http,$window,canvasService){
      */
     $window.myMap = function() {
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 20,
+            zoom: 7,
             center: new google.maps.LatLng(18.568423977139, 73.9084966388288),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
     
-        //var ms = [{"created_timestamp":1521552964,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.568423977139,"longitude":73.9084966388288,"timestamp":1521552962},{"created_timestamp":1521552845,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5684024775574,"longitude":73.9084547293129,"timestamp":1521552844},{"created_timestamp":1521552844,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5684024775574,"longitude":73.9084547293129,"timestamp":1521552843},{"created_timestamp":1521552835,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5684053340468,"longitude":73.908455904444,"timestamp":1521552834},{"created_timestamp":1521551476,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5683970293203,"longitude":73.9085910190585,"timestamp":1521551476},{"created_timestamp":1521551475,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5683581372896,"longitude":73.9086570684555,"timestamp":1521551475},{"created_timestamp":1521551474,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5683506773958,"longitude":73.9086509496662,"timestamp":1521551474},{"created_timestamp":1521551473,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5683785053143,"longitude":73.9085783623847,"timestamp":1521551473},{"created_timestamp":1521551473,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5683042835617,"longitude":73.9087656979206,"timestamp":1521551471},{"created_timestamp":1521551470,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5683560418138,"longitude":73.9088045899513,"timestamp":1521551470},{"created_timestamp":1521551468,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5684087220752,"longitude":73.9085053560081,"timestamp":1521551468},{"created_timestamp":1521551467,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.568405571992,"longitude":73.9084560132771,"timestamp":1521551466},{"created_timestamp":1521551466,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5685604345226,"longitude":73.9085890912208,"timestamp":1521551465},{"created_timestamp":1521551415,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5685669304976,"longitude":73.9086033404562,"timestamp":1521551414},{"created_timestamp":1521551384,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5685351630846,"longitude":73.9086449985149,"timestamp":1521551384},{"created_timestamp":1521551383,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.568553477543,"longitude":73.9086007420662,"timestamp":1521551383},{"created_timestamp":1521551382,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5686017153958,"longitude":73.9085442480388,"timestamp":1521551381},{"created_timestamp":1521551379,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5685726721013,"longitude":73.9085821342411,"timestamp":1521551379},{"created_timestamp":1521551376,"device_id":"259EF863-28F6-4AD0-B5F4-8B521D19E1C3","lat":18.5685189441019,"longitude":73.9085913543346,"timestamp":1521551374}]
         var marker, i;
     
-        for (i = 0; i < $window.locations.length; i++) {  
+        for (i = 0; i < $window.locations.length; i++) {
             marker = new google.maps.Marker({
             position: new google.maps.LatLng($window.locations[i].lat, $window.locations[i].longitude),
             map: map,
@@ -77,6 +82,7 @@ function dashboardController($scope,$http,$window,canvasService){
     $scope.getMerchants = function(){
         $http({method:'GET',url:'http://35.168.89.251:5000/get_merchants',body:null}).then(function(success){
             $scope.merchants = success.data.result;
+            $scope.selectedMarchant = '#';
         },function(error){
             console.log("error while getting merchants : "+error.status);
         });
@@ -89,6 +95,7 @@ function dashboardController($scope,$http,$window,canvasService){
     $scope.getDevices = function(){
         $http({method:'GET',url:'http://35.168.89.251:5000/get_devices',body:null}).then(function(success){
             $scope.devices = success.data.result;
+            $scope.selectedDevice = '#';
             $scope.classifyOffers($scope.offers);   
         },function(error){
             console.log("error while getting devices : "+error.status);
@@ -116,8 +123,9 @@ function dashboardController($scope,$http,$window,canvasService){
      * get offer from device
      * @param {*} device 
      */
-    $scope.getOffer = function(device){    
-        $http({method:'GET',url:'http://35.168.89.251:5000//get_all_offers/'+device.device_id,body:null}).then(function(success){
+    $scope.getOffer = function(){  
+        $scope.offer = [];
+        $http({method:'GET',url:'http://35.168.89.251:5000//get_all_offers/'+$scope.selectedDevice,body:null}).then(function(success){
                 $scope.offer = success.data.result;
         },function(error){
             console.log("error while getting devices : "+error.status);
@@ -130,9 +138,9 @@ function dashboardController($scope,$http,$window,canvasService){
      * @param {*} device 
      */
     $scope.getDeviceLocation = function(device){
+        $scope.location = device.count;
         $http({method:'GET',url:'http://35.168.89.251:5000//get_device_loc/'+device.device_id,body:null}).then(function(success){
-            $scope.location = success.data.result;
-            $window.locations = $scope.location;
+            $window.locations = success.data.result;
             //After selecting device render it on MAP 
             $window.myMap(); 
         },function(error){
@@ -147,19 +155,13 @@ function dashboardController($scope,$http,$window,canvasService){
      */
     $scope.filterOffers = function(){
         
-        var t = false;
+        $scope.t = false;
         $scope.longestDistance = 0;
-
-        if($scope.selectedMarchant == '#')
-            $scope.selectedMarchant = null;
-        
-        if($scope.selectedDevice == '#')
-            $scope.selectedDevice = null;
-
         $scope.filteredOffers = [];
         for(var i=0;i<$scope.offers.length;i++){
             if($scope.longestDistance < $scope.offers[i].dis)
                 $scope.longestDistance = $scope.offers[i].dis;
+
             if($scope.selectedMarchant && (!$scope.selectedDevice||$scope.selectedDevice == '#')){
                 $scope.offerTitle = 'Offers sent by '+$scope.selectedMarchant+' are :';
                 if($scope.offers[i].merchant == $scope.selectedMarchant)
@@ -173,7 +175,7 @@ function dashboardController($scope,$http,$window,canvasService){
             else if((!$scope.selectedMarchant||$scope.selectedMarchant == '#') && (!$scope.selectedDevice||$scope.selectedDevice == '#')){
                 $scope.offerTitle = 'All Offers are :';
                 $scope.filteredOffers.push($scope.offers[i]);
-                t = true;
+                $scope.t = true;
             }
             else{
                 $scope.offerTitle = 'Offers sent by '+$scope.selectedMarchant+' to device -'+$scope.selectedDevice+' are :';
@@ -182,16 +184,15 @@ function dashboardController($scope,$http,$window,canvasService){
             }
         }
         
-        if(!t){
+        if(!$scope.t){
             //Render Histogram
-            canvasService.renderHistogram($scope.filteredOffers);
+            chartService.renderHistogram($scope.filteredOffers);
             //Render LineGraph
-            canvasService.renderLineGraph($scope.filteredOffers);
+            chartService.renderlinegraph($scope.filteredOffers);       
         }
         else{
-            canvasService.clearCanvas('histogram');
-            canvasService.clearCanvas('linegraph');
-            //canvasService.clearCanvas('pie');
+            chartService.clearCanvas('histogram');
+            chartService.clearCanvas('linegraph');
         }
     }
 
@@ -211,11 +212,11 @@ function dashboardController($scope,$http,$window,canvasService){
                         dummyMerchantOffers++;
                     }
                 }
-            var obj = {merchant:$scope.merchants[i].merchant , offers:dummyMerchantOffers}
+            var obj = {label:$scope.merchants[i].merchant , count:dummyMerchantOffers}
             $scope.classifiedMerchants.push(obj);
             if($scope.mostOffers.sentOffers<dummyMerchantOffers){
                 $scope.mostOffers.sentOffers = dummyMerchantOffers;
-                $scope.mostOffers.device = $scope.merchants[i].merchant;
+                $scope.mostOffers.merchant = $scope.merchants[i].merchant;
             }
         } 
 
@@ -229,13 +230,15 @@ function dashboardController($scope,$http,$window,canvasService){
                     }
                 }
 
-                var obj = {device:$scope.devices[i].device_id , offers:dummyDeviceOffers};
+                var obj = {label:$scope.devices[i].device_id , count:dummyDeviceOffers};
                 $scope.classifiedDevices.push(obj);
                 if($scope.mostOffers.receivedOffers<dummyDeviceOffers){
                     $scope.mostOffers.receivedOffers = dummyDeviceOffers;
                     $scope.mostOffers.device = $scope.devices[i].device_id;
                 }
                 
-            }    
+            }   
+            chartService.renderpiegraph($scope.classifiedMerchants,'pie1');  
+            chartService.renderpiegraph($scope.classifiedDevices,'pie2');  
     };
 }

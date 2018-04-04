@@ -1,161 +1,189 @@
-<!DOCTYPE html>
-<html>
-    <head>
-            <title>
-                    Dashboard
-            </title>  
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/pivotal.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    </head> 
-    <body ng-app="dashboardApp" ng-controller="dashboardController">
-                
-                    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-                            <a class="navbar-brand" href="#"><strong>{{title}}</strong></a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-                                    <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                                        <ul class="navbar-nav mr-auto">
-                                                
-                                        </ul>
-                                        <form align="right" name="loginForm"  novalidate class="form-inline my-2 my-lg-0">
-                                                       <div class="form-group">
-                                                               <label style="color:honeydew;" for="merchants">Merchants :</label>
-                                                                <select placeholder="Merchants" id="merchants" class="form-control mr-sm-2" ng-model="selectedMarchant" ng-change="filterOffers()">
-                                                                                <option value="#" selected>select Merchant</option>
-                                                                                <option ng-repeat="m in merchants" value="{{m.merchant}}" >{{m.merchant}}</option>
-                                                                </select>
-                                                       </div>
-                                                       <div class="form-group">
-                                                                <label style="color:honeydew;" for="devices">Devices :</label>
-                                                                <select placeholder="Devices" id="devices" class="form-control mr-sm-2" ng-model="selectedDevice" ng-change="filterOffers()">
-                                                                                <option value="#" selected>select device</option>
-                                                                                <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getOffer(d); filterOffers(); getDeviceLocation(d);">{{d.device_id}}</option>
-                                                                </select>
-                                                        </div>
-                                        </form> 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="simple dashboard">
+    <meta name="author" content="Vivek">
+
+    <title>sidenav</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+    <link rel="stylesheet" href="/pivotal.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+
+  </head>
+
+  <body class="text-center" ng-app="dashboardApp" ng-controller="dashboardController">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+          <a class="navbar-brand" href="#"><strong><i class="fas fa-tachometer-alt"></i>&nbsp;&nbsp;{{title}} </strong></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                      <ul class="navbar-nav mr-auto">
+                              
+                      </ul>
+                      <form align="right" name="loginForm"  novalidate class="form-inline my-2 my-lg-0">
+                                     <div class="form-group">
+                                              <select placeholder="Merchants" id="merchants" class="form-control mr-sm-2" ng-model="selectedMarchant" ng-change="filterOffers()">
+                                                              <option value="#" selected>select Merchant</option>
+                                                              <option ng-repeat="m in merchants" value="{{m.merchant}}" >{{m.merchant}}</option>
+                                              </select>
+                                     </div>
+                                     <div class="form-group">
+                                              <select placeholder="Devices" id="devices" class="form-control mr-sm-2" ng-model="selectedDevice" ng-change="getOffer();filterOffers();">
+                                                              <option value="#" selected>select device</option>
+                                                              <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getDeviceLocation(d);">{{d.device_id}}</option>
+                                              </select>
+                                      </div>
+                      </form> 
+          </div>
+  </nav>
+          <div class="container-fluid">
+          <div class="row">
+                  <main role="main" class="col-md-12 ml-sm-auto pt-3 px-4">
+                      <form name="loginForm"  novalidate class="form-inline">
+                          <div class="form-row" style="width:100%;margin-bottom:10px;">
+                            <div class="col-sm">
+                                <select placeholder="Merchants" id="merchants" class="form-control" ng-model="selectedMarchant" ng-change="filterOffers()"> 
+                                    <option value="#">select Merchant</option>
+                                    <option ng-repeat="m in merchants" value="{{m.merchant}}" >{{m.merchant}}</option>
+                                </select>
                             </div>
-                    </nav>
-                    
-                    <div class="fluid-container" style="padding-top:60px;">       
-                                <div class="row">
-                                        <div class="alert alert-info" style="width:100%;" align="center">
-                                              Please select Merchant and/or Device to see the result
-                                        </div>
-                                </div> 
-                                <div class="row">
-                                        <div class="col-md-2">
-                                                        <div class="card bg-light" style="height:600px;overflow: scroll;">
-                                                                <div class="card-header">
-                                                                        All Offers<!-- All Offers {{offerTitle}} -->
-                                                                </div>
-                                                                <div class="card-body">
-                                                                        <ul style="list-style-type: none;padding: 0px;">
-                                                                                <li ng-repeat="offer in filteredOffers">
-                                                                                        <span class="badge badge-success">{{offer.merchant}}</span>
-                                                                                        <span class="badge badge-primary">({{offer.offer}})</span>
-                                                                                </li>   
-                                                                        </ul>
-                                                                </div>
-                                                        </div>
-                                        </div>
-                                        <div class="col-md-10" style="height: 600px;overflow:scroll;">
-                                                <div class="row" style="height:400px;">
-                                                        <div class="col-md-6">
-                                                                <p>Histogram about distance of devices from merchants</p>
-                                                                        <div id="hist" class="histogram"><br>
-                                                                                <canvas  id="histogram" height="300" width="600"></canvas>
-                                                                        </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                                <p>Line graph of Distances</p>
-                                                                        <div id="line" class="linegraph"><br>
-                                                                                <canvas  id="linegraph" height="300" width="600"></canvas>
-                                                                        </div>
-                                                        </div>
-                                                </div>
-                                                <div class="row">
-                                                        <p>&nbsp;Device Activity</p>
-                                                        <div class="col-md-12" id="map" style="height:200px;">
-                                                        </div>
-                                                </div>
-                                        </div>
-                                </div><hr/>
-                                <div class="row">
-                                        <div class="col-md-6">
-                                                <div class="card bg-light  mb-3">
-                                                                <div class="card-header">Total Offers Sent By Merchants</div>
-                                                                <div class="card-body" style="padding:0px;">
-                                                                                <table class="table table-sm table-condensed table-bordered table-striped">
-                                                                                                <thead>
-                                                                                                        <tr>
-                                                                                                          <th>Merchant</th>
-                                                                                                          <th>Sent Offers</th>
-                                                                                                        </tr>
-                                                                                                </thead>
-                                                                                        <tbody>
-                                                                                                <tr ng-repeat="m in classifiedMerchants|startFrom:currentPage*pageSize|limitTo:pageSize">
-                                                                                                                <td>{{m.merchant}}</td>
-                                                                                                                <td>{{m.offers}} </td>
-                                                                                                </tr>
-                                                                                        </tbody>
-                                                                                </table>
-                                                                                        
-                                                                </div>
-                                                                <div class="card-footer">
-                                                                                <div class="btn-group" role="group" style="float:right;">
-                                                                                                <button type="button" class="btn btn-outline-success" ng-disabled="currentPage == 0" ng-click="changePage(-1,'merchant');">Pre</button>
-                                                                                                <button type="button" class="btn btn-disabled btn-success">{{currentPage+1}}/{{numberOfmerchantsPages()}}</button>
-                                                                                                <button type="button" class="btn btn-outline-success" ng-disabled="currentPage >= classifiedMerchants.length/pageSize - 1" ng-click="changePage(1,'merchant');">Next</button>
-                                                                                </div>
-                                                                </div>
-                                                </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                                        <div class="card bg-light  mb-3">
-                                                                        <div class="card-header">Total Offers Received By Devices</div>
-                                                                        <div class="card-body" style="padding:0px;">
-                                                                                        <table class="table table-sm table-condensed table-bordered table-striped" >
-                                                                                                        <thead>
-                                                                                                                <tr>
-                                                                                                                  <th>Device</th>
-                                                                                                                  <th>Received Offers</th>
-                                                                                                                </tr>
-                                                                                                        </thead>
-                                                                                                        <tbody>
-                                                                                                                <tr ng-repeat="d in classifiedDevices|startFrom:currentdPage*pageSize|limitTo:pageSize">
-                                                                                                                        <td>{{d.device}}</td>
-                                                                                                                        <td>{{d.offers}}</td>
-                                                                                                                </tr>
-                                                                                                        </tbody>
-                                                                                      
-                                                                                                </table>
-                                                                                                
-                                                                        </div>
-                                                                        <div class="card-footer" align="center">
-                                                                                        <div class="btn-group" role="group" style="float:right;">
-                                                                                                        <button type="button" class="btn btn-outline-success" ng-disabled="currentdPage == 0" ng-click="changePage(-1,'device');">Pre</button>
-                                                                                                        <button type="button" class="btn btn-disabled btn-success">{{currentdPage+1}}/{{numberOfdevicePages()}}</button>
-                                                                                                        <button type="button" class="btn btn-outline-success" ng-disabled="currentdPage >= classifiedDevices.length/pageSize - 1" ng-click="changePage(1,'device');">Next</button>
-                                                                                        </div>
-                                                                        </div>
-                                                        </div>
-                                                        
-                                        </div>
-                                </div>
+                            <div class="col-sm">
+                                <select placeholder="Devices" id="devices" class="form-control"  ng-model="selectedDevice" ng-change="filterOffers(); getOffer();">
+                                    <option value="#">select device</option>
+                                    <option ng-repeat="d in devices" value="{{d.device_id}}" ng-click="getDeviceLocation(d);">{{d.device_id}}</option>
+                                </select>
+                            </div>
+                          </div>
+                        </form>
+                    <div class="row" style="margin-bottom: 20px;">
+                      <div class="col-sm">
+                          <div id="pi1" class="pie"><br>
+                            <p>Total Offers Sent By Merchants</p>
+                                    <canvas  id="pie1" height="200" width="400"></canvas>
+                          </div>
+                      </div>
+                      <div class="col-sm">
+                          <div id="pi2" class="pie"><br>
+                            <p>Total Offers received by devices</p>
+                                  <canvas  id="pie2" height="200" width="400"></canvas>
+                          </div>
+                      </div>
+                      <div class="col-sm">
+                          <div class="card text-white bg-success mb-3">
+                              <div class="card-header">Most Offers sent by Merchant</div>
+                              <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-utensils"></i>&nbsp;{{mostOffers.merchant}} : {{mostOffers.sentOffers}}</h5>
+                              </div>
+                          </div>
+                          <div class="card text-white bg-secondary mb-3">
+                              <div class="card-header">Most Offers received by Device</div>
+                              <div class="card-body">
+                                  <h5 class="card-title"><i class="fas fa-mobile"></i>&nbsp;{{mostOffers.device}} : {{mostOffers.receivedOffers}}</h5>
+                              </div>
+                          </div>
+                      </div>
                     </div>
-        <script src="/dashboard.module.js"></script>
-        <script src="/canvas.service.js"></script>            
-        <script src="/dashboard.controller.js"></script>
-        
-        <script>
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFRYUi0V-BPvCt7r25fOp6jn7CjtQ4f18&callback=myMap" async defer></script>
-    </body>  
+
+                    <div class="row" style="margin-bottom: 50px;" ng-show="!t">
+                          <div class="col-md-6">
+                            <div id="hist"><br>
+                                <p> <i class="far fa-chart-bar"></i> Histogram about distance of devices from merchants</p>
+                                     <canvas  id="histogram" height="200" width="400"></canvas>
+                             </div>
+                          </div>
+                            <div class="col-md-6">
+                                <div id="line"><br>
+                                  <p><i class="fas fa-chart-line"></i> Line graph of Distances</p>
+                                        <canvas  id="linegraph" height="200" width="400"></canvas>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="row" ng-show="!t">
+                        <div class="col-md-12" id="mapDiv">
+                              <p> <i class="fas fa-compass"></i> Device Activity</p>
+                                <div id="map" style="height:200px;margin:20px;">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-show="t">
+                      <div class="col-md-12">
+                          <div class="alert alert-dark fluid" role="alert" align="left">
+                              <h4 class="alert-heading">Charts and Map</h4>
+                              <p>Want to see the charts? Please select Merchant and/or Devices and See the Result. Also some of the values below are depending on the selection.</p>
+                              <hr>
+                              <p class="mb-0">Try changing the values of list,Graph will be rendered instantly.</p>
+                            </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+                                <div class="card-header">Offers Redeemed</div>
+                                <div class="card-body">
+                                  <h5 class="card-title"><i class="fab fa-get-pocket"></i>
+                                    <span ng-if="offer">&nbsp;{{offer.length}}</span>0
+                                  </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+                                <div class="card-header">Longest Distance</div>
+                                <div class="card-body">
+                                  <h5 class="card-title"><i class="fas fa-road"></i>
+                                  <span ng-if="longestDistance">&nbsp;{{longestDistance|number:2}}</span>0
+                                  </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+                                <div class="card-header">Locations Visited</div>
+                                <div class="card-body">
+                                  <h5 class="card-title"><i class="fas fa-map-marker"></i>&nbsp;{{location}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                <div class="card-header">Total Devices</div>
+                                <div class="card-body">
+                                  <h5 class="card-title"><i class="fas fa-mobile-alt"></i>&nbsp;
+                                    <span ng-if="devices">&nbsp;{{devices.length}}</span></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                                <div class="card-header">Total Merchants</div>
+                                <div class="card-body">
+                                  <h5 class="card-title"><i class="fas fa-utensils"></i>&nbsp;
+                                    <span ng-if="merchants">&nbsp;{{merchants.length}}</span></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </main>
+                </div>
+              </div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="/dashboard.module.js"></script>  
+    <script src="/chart.service.js"></script>            
+    <script src="/dashboard.controller.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFRYUi0V-BPvCt7r25fOp6jn7CjtQ4f18&callback=myMap" async defer></script>
+  </body>
 </html>

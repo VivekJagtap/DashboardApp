@@ -1,35 +1,36 @@
 ul {
     list-style-type: none;
     padding:0;
-  }
+}
 
-select {
-    width:300px; 
-} 
+.select {
+    background-color: #212529;
+    color:whitesmoke;
+}
 
 #hist{
     height:350px;
+    color: rgb(18, 16, 36);
+    border-top: 2px solid teal;
+    margin-bottom: 20px;
 }
  
 #line{
     height:350px;
+    color: rgb(18, 16, 36);
+    border-top: 2px solid darkgreen;
+    margin-bottom: 20px;
 }
 
-.histogram{
-      background-color: #f0f1f2;
-      height:350px;
-      overflow-y:scroll;
-  }
-
-.linegraph{
-    background-color: #f0f1f2;
-    height:350px;
-    overflow-x:scroll;
+#mapDiv{
+    border-top: 2px solid black;
+    margin-bottom: 20px;
 }
 
-.map{
-    background-color: #f0f1f2;
-    height:200px;
+.pie {
+    color: rgb(18, 16, 36);
+    border-top: 2px solid slateblue;
+    padding-bottom: 5px;
 }
 
 ::-webkit-scrollbar {
